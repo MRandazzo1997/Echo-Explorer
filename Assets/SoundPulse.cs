@@ -1,34 +1,39 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System;
 
 public class SoundPulse : MonoBehaviour
 {
-    public float maxRadius = 10f;  // Maximum distance the sound travels
-    public float expansionSpeed = 5f; // How fast the pulse expands
-    public LayerMask obstacleMask; // Defines what objects the sound interacts with
+    public float maxRadius = 10f;
+    public float expansionSpeed = 5f;
+    public LayerMask obstacleMask;
+    public Color pulseColor;
 
     private float currentRadius = 0f;
     private bool isExpanding = false;
+    public Transform pulseVisual; // Reference to the visual effect
+
+    private void Start()
+    {
+        pulseVisual.gameObject.GetComponent<MeshRenderer>().material.color = pulseColor;
+    }
 
     void Update()
     {
         if (isExpanding)
         {
             currentRadius += expansionSpeed * Time.deltaTime;
+            pulseVisual.gameObject.GetComponent<MeshRenderer>().material.SetFloat("_Radius", currentRadius);
+            pulseVisual.localScale = Vector3.one * currentRadius * 2f; // Scale the visual
 
-            // Check for obstacles hit by the sound
             DetectSurfaces();
 
-            // Stop expansion once it reaches max radius
             if (currentRadius >= maxRadius)
             {
                 isExpanding = false;
                 currentRadius = 0f;
+                pulseVisual.gameObject.SetActive(false); // Hide after finishing
             }
         }
 
-        // Trigger a sound pulse manually with Space key
         if (Input.GetKeyDown(KeyCode.Space))
         {
             StartPulse();
@@ -39,19 +44,17 @@ public class SoundPulse : MonoBehaviour
     {
         isExpanding = true;
         currentRadius = 0f;
-
-        Debug.Log("Sound started");
+        pulseVisual.gameObject.GetComponent<MeshRenderer>().material.SetVector("_Pulse_Origin", pulseVisual.position);
+        pulseVisual.gameObject.SetActive(true);
     }
 
     void DetectSurfaces()
     {
-        //Collider[] hitColliders = Physics.OverlapSphere(transform.position, currentRadius, obstacleMask);
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), currentRadius, obstacleMask);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, currentRadius, obstacleMask);
 
         foreach (Collider2D hit in hitColliders)
         {
-            Debug.Log("Sound hit: " + hit.gameObject.name); // For testing
-            // Later, we'll handle reflections, absorption, etc.
+            Debug.Log("Sound hit: " + hit.gameObject.name);
         }
     }
 }

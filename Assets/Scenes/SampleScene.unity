@@ -689,7 +689,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 405a7b6a16fdb1a4c9d9f107837c1456, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -887,6 +887,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8
+  pulseColor: {r: 0.7294118, g: 0.65833336, b: 0.10196078, a: 1}
+  pulseVisual: {fileID: 1702793263}
 --- !u!4 &1869590524
 Transform:
   m_ObjectHideFlags: 0
